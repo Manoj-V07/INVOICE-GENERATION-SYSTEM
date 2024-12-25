@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Generator</title>
+  <style>
+    body {
+      font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+      margin: 20px;
+      background-color: bisque;
+    }
+
+    h1, h2 {
+      font-family:'Times New Roman', Times, serif;
+      text-align: center;
+    }
+    form, #invoiceContainer {
+      background: rgb(241, 238, 235);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px auto;
+      width: 80%;
+    }
+
+    label, input, textarea, button {
+      display: block;
+      width: 95%;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    textarea {
+      resize: vertical;
+    }
+    input, textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button:hover{
+      background-color: black;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #invoiceContent {
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>INVOICE GENERATION SYSTEM</h1>
+  <img src="C:\Users\MANOJ V\Desktop\invoice bill.webp" style="display: block; margin: 0 auto;">
+  <pre style="font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size:20px;">
+    Disclaimer:⚠️⚠️⚠️⚠️
+
+    This Invoice Generator is provided as a free tool to assist users in generating basic invoices for personal or business use. 
+    While we strive to ensure the accuracy and reliability of the calculations and features, users are advised to review all generated invoices thoroughly before use.
+
+    Please Note:
+    1.This tool does not store or process any personal data entered. All inputs remain solely on your device.
+    2.The generated invoices are not legally binding documents. They are intended for informational and preliminary purposes only.
+    3.Users are responsible for ensuring compliance with local tax laws, regulations, and accounting standards.
+    4.We assume no responsibility for errors, omissions, or damages resulting from the use of this tool.
+  </pre>
+  <!-- Invoice Input Form -->
+  <form id="invoiceForm">
+    <fieldset>
+      <legend>CUSTOMER DETAILS</legend>
+      <label for="customerName">CUSTOMER NAME:</label>
+      <input type="text" id="customerName" placeholder="EG:MANOJ" required><br>
+      <label for="phno">PHONE NUMBER:</label>
+      <input type="number" id="phno" placeholder="9876543210" required><br>
+      <label for="customerAddress">CUSTOMER ADDRESS:</label>
+      <textarea id="customerAddress" placeholder="EG:123 ABC STREET" required></textarea><br>
+    </fieldset>
+
+    <fieldset>
+      <legend>ITEM DETAILS</legend>
+      <label for="itemDescription">ITEM DESCRIPTION:</label>
+      <input type="text" id="itemDescription" placeholder="EG: AIR CONDITONER" required><br>
+      <label for="quantity">QUANTITY:</label>
+      <input type="number" id="quantity" min="1" placeholder="EG: 1" required><br>
+      <label for="pricePerUnit">PRICE PER UNIT:</label>
+      <input type="number" id="pricePerUnit" min="0.01" step="0.01" placeholder="EG:50000" required><br>
+      <label for="taxRate">TAX RATE(%):</label>
+      <input type="number" id="taxRate" min="0" step="0.01" placeholder="EG:19"><br>
+    </fieldset>
+
+    <button type="button" onclick="generateInvoice()">GENERATE INVOICE</button>
+  </form>
+
+  <!-- Invoice Display -->
+  <div id="invoiceContainer" class="hidden">
+    <h2>INVOICE</h2>
+    <div id="invoiceContent"></div>
+    <button onclick="downloadInvoice()">DOWNLOAD AS PDF</button>
+    <button onclick="printInvoice()">PRINT INVOICE</button>
+  </div>
+  <h4 style="font-size:20px;">!!!!!INVOICE GENERATORS CAN MAKE MISTAKES BE CAUTIOUS!!!!!</h4>
+  <script>
+    function generateInvoice() {
+      // Get input values
+      const customerName = document.getElementById("customerName").value;
+      const phno = document.getElementById("phno").value;
+      const customerAddress = document.getElementById("customerAddress").value;
+      const itemDescription = document.getElementById("itemDescription").value;
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const pricePerUnit = parseFloat(document.getElementById("pricePerUnit").value);
+      const taxRate = parseFloat(document.getElementById("taxRate").value || 0);
+
+      // Calculate totals
+      const subtotal = quantity * pricePerUnit;
+      const taxAmount = (subtotal * taxRate) / 100;
+      const total = subtotal + taxAmount;
+
+      // Generate invoice content
+      const invoiceHTML = `
+        <p><strong>CUSTOMER NAME:</strong> ${customerName}</p>
+        <p><strong>CUSTOMER PHONE NUMBER:</strong>${phno}</p>
+        <p><strong>CUSTOMER ADDRESS:</strong> ${customerAddress}</p>
+        <p><strong>ITEM DESCRIPTION:</strong> ${itemDescription}</p>
+        <p><strong>QUANTITY:</strong> ${quantity}</p>
+        <p><strong>PRICE PER UNIT:</strong> $${pricePerUnit.toFixed(2)}</p>
+        <p><strong>SUBTOTAL:</strong> $${subtotal.toFixed(2)}</p>
+        <p><strong>TAX RATE:</strong> ${taxRate.toFixed(2)}%</p>
+        <p><strong>TAX AMOUNT:</strong> $${taxAmount.toFixed(2)}</p>
+        <h3>TOTAL AMOUNT: $${total.toFixed(2)}</h3>
+      `;
+
+      // Display invoice
+      document.getElementById("invoiceContent").innerHTML = invoiceHTML;
+      document.getElementById("invoiceContainer").classList.remove("hidden");
+    }
+
+    function downloadInvoice() {
+      const invoiceContent = document.getElementById("invoiceContent").innerHTML;
+      const blob = new Blob([invoiceContent], { type: "text/html" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "invoice.html";
+      link.click();
+    }
+
+    function printInvoice() {
+      window.print();
+    }
+
+  </script>
+</body>
+</html>
+
+
